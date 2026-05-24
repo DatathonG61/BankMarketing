@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# uv / virtualenvs
+.venv/
+venv/
+env/
+ENV/
+
+# Testes / lint / type checking
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE / editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Segredos e ambiente local (mantém .env.example versionado)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+secrets/
+
+# MLflow / experiment tracking local
+mlruns/
+mlartifacts/
+wandb/
+.neptune/
+
+# Modelos binários grandes (versionar via DVC / artifact store)
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.hdf5
+*.onnx
+*.safetensors
+*.pkl
+*.pickle
+*.joblib
+
+# Dados temporários / scratch (data/kaggle, data/processed, data/synthetic_enrichment,
+# data/golden_set são versionados — adicione explicitamente o que pertence ao repo)
+data/raw/
+data/interim/
+data/tmp/
+*.tmp
+*.bak
+scratch/
+
+# Logs e outputs locais
+logs/
+*.log
+
+# uv lock — opcional: descomente se preferir não versionar
+# uv.lock

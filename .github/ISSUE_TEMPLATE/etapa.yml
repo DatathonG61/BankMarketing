@@ -1,0 +1,61 @@
+name: Tarefa de Etapa
+description: Item de trabalho ligado a uma etapa E0–E8 do Datathon
+title: "[E?] "
+labels: ["etapa"]
+body:
+  - type: dropdown
+    id: etapa
+    attributes:
+      label: Etapa
+      description: A qual etapa do Datathon este item pertence?
+      options:
+        - E0 — Organização do projeto
+        - E1 — Base Kaggle e EDA
+        - E2 — Enriquecimento sintético
+        - E3 — Baseline e estratégia algorítmica
+        - E4 — Avaliação offline e golden set
+        - E5 — Serviço demonstrável
+        - E6 — Arquitetura-alvo Azure
+        - E7 — Ciclo de vida MLOps
+        - E8 — Governança, Demo Day e relatórios
+    validations:
+      required: true
+  - type: dropdown
+    id: papel
+    attributes:
+      label: Papel responsável
+      description: Quem lidera este item?
+      options:
+        - A — Data & Propensão
+        - B — Bandit & Avaliação
+        - C — Platform & MLOps
+        - D — Sintéticos, LLM/RAG & Governança
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto / por quê
+      description: Por que este item existe? Link para a seção da etapa no plano.
+    validations:
+      required: true
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      description: Como saberemos que está pronto? Critério objetivo, idealmente executável.
+    validations:
+      required: true
+  - type: textarea
+    id: subtarefas
+    attributes:
+      label: Subtarefas
+      description: Checklist de passos (opcional).
+      value: |
+        - [ ]
+        - [ ]
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referências
+      description: Links para o README oficial, papers, docs internos, etc.
