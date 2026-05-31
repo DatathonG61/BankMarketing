@@ -9,7 +9,7 @@
 set -euo pipefail
 
 OWNER="DatathonG61"
-REPO="DatathonG61/7mlet"
+REPO="DatathonG61/BankMarketing"
 PROJ_NUM=2
 PROJ_ID="PVT_kwDOESKui84BYqwk"
 
@@ -49,32 +49,32 @@ create() {
 
 # ---------- E0 — pendentes (semana 1) ----------
 
-create "[E0] Renomear pacote para datathon_offerexp no pyproject.toml" E0 1 \
+create "[E0] Configurar pacote bankmarketing (build system + layout src/)" E0 1 \
 "## Contexto
-\`pyproject.toml\` atualmente tem \`name = \"7mlet\"\`, que é inválido como módulo Python (não pode começar com dígito) e diverge do README oficial do Datathon que usa \`datathon_offerexp\`.
+O pacote foi renomeado para \`bankmarketing\` em \`pyproject.toml\` (alinhado ao novo nome do repositório). Falta configurar o build system e o layout \`src/\` para que o pacote seja importável.
 
 ## Definition of Done
-- [ ] \`pyproject.toml\` com \`name = \"datathon_offerexp\"\`
+- [ ] \`pyproject.toml\` com \`name = \"bankmarketing\"\`
 - [ ] Configurar build system para layout \`src/\` (hatchling ou setuptools)
 - [ ] \`uv sync\` roda sem erro
-- [ ] \`uv run python -c 'import datathon_offerexp'\` funciona
+- [ ] \`uv run python -c 'import bankmarketing'\` funciona
 
 ## Referências
 - Plano: seção E0 e Apêndice de Decisões de Tecnologia
 - README oficial: \`ref_docs/README.md\`"
 
-create "[E0] Criar esqueleto src/datathon_offerexp/ com módulos stub" E0 1 \
+create "[E0] Criar esqueleto src/bankmarketing/ com módulos stub" E0 1 \
 "## Contexto
 Estrutura mínima de módulos exigida pelo README oficial. Stubs apenas com docstring + imports — implementações vêm nas etapas seguintes.
 
 ## Definition of Done
-- [ ] \`src/datathon_offerexp/__init__.py\`
-- [ ] \`src/datathon_offerexp/contracts.py\` — placeholder para pydantic models
-- [ ] \`src/datathon_offerexp/policies.py\` — placeholder para BaselinePolicy e ThompsonSamplingPolicy
-- [ ] \`src/datathon_offerexp/evaluation.py\` — placeholder para script de avaliação offline
-- [ ] \`src/datathon_offerexp/decision_log.py\` — placeholder para log auditável
-- [ ] \`src/datathon_offerexp/app.py\` — placeholder para FastAPI
-- [ ] \`src/datathon_offerexp/data.py\` — placeholder para loader do JYB
+- [ ] \`src/bankmarketing/__init__.py\`
+- [ ] \`src/bankmarketing/contracts.py\` — placeholder para pydantic models
+- [ ] \`src/bankmarketing/policies.py\` — placeholder para BaselinePolicy e ThompsonSamplingPolicy
+- [ ] \`src/bankmarketing/evaluation.py\` — placeholder para script de avaliação offline
+- [ ] \`src/bankmarketing/decision_log.py\` — placeholder para log auditável
+- [ ] \`src/bankmarketing/app.py\` — placeholder para FastAPI
+- [ ] \`src/bankmarketing/data.py\` — placeholder para loader do JYB
 - [ ] Cada arquivo importa limpo
 
 ## Bloqueia
@@ -180,7 +180,7 @@ Tabela de modelagem versionada e código que registra fonte/versão/licença ao 
 ## Definition of Done
 - [ ] \`data/processed/modeling_table.parquet\` gerado a partir do JYB
 - [ ] Colunas pós-decisão **removidas explicitamente**, com decisão documentada
-- [ ] \`src/datathon_offerexp/data.py\` com função \`load_modeling_table()\` que:
+- [ ] \`src/bankmarketing/data.py\` com função \`load_modeling_table()\` que:
   - retorna DataFrame
   - registra metadata (fonte, versão, licença) em log estruturado
 - [ ] Teste \`tests/test_data.py\` valida shape esperado
@@ -213,7 +213,7 @@ create "[E2] Implementar gerador de offer_catalog.sample.csv v0" E2 2 \
 Primeiro arquivo sintético — catálogo de braços × canais × horários.
 
 ## Definition of Done
-- [ ] Código de geração em \`src/datathon_offerexp/synthetic.py\` (ou notebook em \`notebooks/\`)
+- [ ] Código de geração em \`src/bankmarketing/synthetic.py\` (ou notebook em \`notebooks/\`)
 - [ ] \`data/synthetic_enrichment/offer_catalog.sample.csv\` gerado
 - [ ] Schema validado contra o documento em \`reports/data-generation.md\`
 - [ ] Seeds documentadas
@@ -245,7 +245,7 @@ create "[E3] Implementar BaselinePolicy determinística" E3 2 \
 Política simples de controle. Sem ela, não há comparação quantitativa.
 
 ## Definition of Done
-- [ ] \`BaselinePolicy\` em \`src/datathon_offerexp/policies.py\`
+- [ ] \`BaselinePolicy\` em \`src/bankmarketing/policies.py\`
 - [ ] Implementa contrato \`select_arm(event, scores, mode='baseline', ...)\` do README oficial
 - [ ] Estratégia documentada (ex.: melhor braço histórico, regra fixa)
 - [ ] Teste \`tests/test_policies.py::test_baseline\` cobre casos básicos
@@ -261,8 +261,8 @@ create "[E5] API stub FastAPI /decide com contratos pydantic congelados" E5 2 \
 Forçar integração desde a semana 2 — \`make demo\` ponta a ponta na semana 3 depende disso.
 
 ## Definition of Done
-- [ ] \`src/datathon_offerexp/app.py\` com endpoint \`POST /decide\`
-- [ ] \`src/datathon_offerexp/contracts.py\` com pydantic:
+- [ ] \`src/bankmarketing/app.py\` com endpoint \`POST /decide\`
+- [ ] \`src/bankmarketing/contracts.py\` com pydantic:
   - \`DecisionRequest\` (event_id, subject_key, channel, segment, available_arms, context)
   - \`DecisionResponse\` (decision_id, selected_arm, reason_codes, policy_version)
   - \`DecisionLog\` (do README oficial)
