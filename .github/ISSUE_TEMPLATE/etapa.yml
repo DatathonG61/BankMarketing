@@ -23,13 +23,14 @@ body:
   - type: dropdown
     id: papel
     attributes:
-      label: Papel responsável
-      description: Quem lidera este item?
+      label: Responsável
+      description: Quem lidera este item? (divisão por pessoas — ver ref_docs/PLANO.md)
       options:
-        - A — Data & Propensão
-        - B — Bandit & Avaliação
-        - C — Platform & MLOps
-        - D — Sintéticos, LLM/RAG & Governança
+        - Gabriel — Eng. de Dados (E1, E2, LGPD)
+        - Adryen — Cientista de Dados (E3, Model/System Card)
+        - Bertelli — MLOps & Avaliação (E4, E7, Model/System Card)
+        - Matheus — Backend/Cloud & LLM (E5, E6, FinOps)
+        - Todos — Repo, relatório e pitch (E0, E8)
     validations:
       required: true
   - type: textarea
@@ -58,4 +59,4 @@ body:
     id: referencias
     attributes:
       label: Referências
-      description: Links para o README oficial, papers, docs internos, etc.
+      description: Links para o plano (ref_docs/PLANO.md), papers, docs internos, etc.
