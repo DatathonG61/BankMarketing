@@ -20,6 +20,11 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/bankmarketing"]
 
+[tool.ruff]
+# ref_docs guarda material de referência (notebooks de terceiros); fora do lint/format.
+# Notebooks (.ipynb) das demais pastas continuam sendo checados (padrão do ruff).
+extend-exclude = ["ref_docs"]
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
