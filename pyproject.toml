@@ -5,9 +5,12 @@ description = "Plataforma de experimentação adaptativa de ofertas financeiras 
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dython>=0.7.12",
+    "notebook>=7.5.7",
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",
     "scikit-learn>=1.9.0",
+    "seaborn>=0.13.2",
 ]
 
 [build-system]
