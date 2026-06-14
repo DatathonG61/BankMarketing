@@ -191,7 +191,7 @@ Base factual do projeto. Sem metadados rastreaveis (fonte, versao, licenca), a b
   - versao e data do download
   - licenca
   - instrucoes de download (\`kaggle datasets download henriqueyamahata/bank-marketing\`)
-  - colunas com descricao breve (age, job, balance, housing, loan, ...)
+  - colunas com descricao breve (age, job, default, housing, loan, ...)
   - **coluna \`duration\` marcada como leakage temporal a remover**
   - limitacoes conhecidas
 
@@ -207,7 +207,7 @@ Entender a base antes de modelar. **Confirmar candidatos a leakage temporal** --
   - shape, dtypes, % missing
   - distribuicao do target \`y\`
   - balanceamento de classes
-  - distribuicoes de \`age\`, \`balance\`, \`job\` (insumo para contexto sintetico)
+  - distribuicoes de \`age\`, \`job\`, \`default\` (insumo para contexto sintetico; nao ha \`balance\` na base)
   - correlacoes iniciais
   - **lista de features candidatas a leakage com justificativa (\`duration\` no topo)**
 - [ ] Dicionario de dados (\`docs/data-dictionary.md\` ou no notebook)
@@ -256,10 +256,10 @@ Camada sintetica e o que torna o projeto um bandit. Schema **antes** do codigo p
 - [ ] \`reports/data-generation.md\` com:
   - bracos (\`Arm\`): \`sem_oferta\`, \`cartao_credito\` (Oferta A), \`investimento\` (Oferta B), \`renegociacao\`
   - canais (\`Channel\`): \`app\`, \`web\`, \`email\`
-  - segmentos (\`Segment\`) derivados de age/balance/job: ex. \`jovem_saldo_baixo\`, \`maduro_alto_saldo\`, \`negativado\`
+  - segmentos (\`Segment\`) derivados de age/job/default: ex. \`jovem_baixa_renda\`, \`maduro_alta_renda\`, \`negativado\` (default=yes)
   - schema de \`offer_catalog\`, \`offer_events\`, \`delayed_rewards\`
   - **modelo de delayed reward**: janela temporal, distribuicao
-  - hipoteses de negocio (jovem -> cartao; alto saldo -> investimento; negativado -> renegociacao)
+  - hipoteses de negocio (jovem/baixa renda -> cartao; maduro/alta renda -> investimento; negativado/default=yes -> renegociacao)
   - seeds aleatorias usadas
 
 ## Bloqueia
@@ -323,8 +323,8 @@ Golden set e o regression test da politica. Esbocar cedo os tipos de caso.
 
 ## Definition of Done
 - [ ] Rascunho de >= 20 casos (tipicos, borda, adversariais) em texto/planilha:
-  - tipico: cliente com R\$ 50.000 de saldo -> esperado: Investimento
-  - borda: cliente negativado (saldo negativo) -> esperado: NAO oferecer credito, oferecer renegociacao
+  - tipico: cliente maduro de maior renda (job=management, default=no, com housing) -> esperado: Investimento
+  - borda: cliente negativado (default=yes) -> esperado: NAO oferecer credito, oferecer renegociacao
   - adversarial: contexto inconsistente / faltando campos
 - [ ] Definicao do formato final \`data/golden_set/evaluation_cases.jsonl\`
 - [ ] Criterios de avaliacao alinhados com o edital

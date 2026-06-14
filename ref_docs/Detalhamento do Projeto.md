@@ -12,7 +12,7 @@ Vocês não vão usar dados do banco real da faculdade. Vocês vão pegar dados 
 **O que fazer:** Baixe a base bank-marketing (henriqueyamahata) do Kaggle (ela tem dados sobre campanhas de banco).
 
 **Exemplo prático:**
-Os dados originais: Terão colunas como idade, profissão, saldo_bancario. Você deve deletar a coluna duration, pois ela causa vazamento temporal (é uma informação do futuro prevendo o passado). Salve isso na pasta data/processed/
+Os dados originais: Terão colunas como idade (age), profissão (job), inadimplência (default), empréstimos (housing/loan). ATENÇÃO: a base indicada (bank-additional-full.csv) NÃO tem coluna de saldo bancário (balance) — onde o exemplo falava em "saldo", usamos proxies de capacidade financeira (default, job, loan). Você deve deletar a coluna duration, pois ela causa vazamento temporal (é uma informação do futuro prevendo o passado). Salve isso na pasta data/processed/
 
 Os dados sintéticos (falsos): Você vai criar uma pasta data/synthetic_enrichment/ e criar arquivos simulando o problema
 Exemplo: crie um offer_catalog (Catálogo de Ofertas) com as opções: Oferta A (Cartão de Crédito) e Oferta B (Investimento)
@@ -32,8 +32,8 @@ A banca quer ter certeza de que seu modelo não vai fazer loucuras em produção
 O que fazer: Criar um arquivo chamado evaluation_cases.jsonl dentro da pasta data/golden_set/ com no mínimo 20 clientes inventados para testar o modelo.
 
 Exemplo prático:
-Caso 1 (Típico): Cliente com R$ 50.000 de saldo. Ação esperada do modelo: Oferecer Investimento.
-Caso 2 (Extremo/Borda): Cliente com conta negativada. Ação esperada do modelo: Não oferecer crédito, oferecer um plano de renegociação.
+Caso 1 (Típico): Cliente maduro de maior renda (ex.: job=management, default=no). Ação esperada do modelo: Oferecer Investimento.
+Caso 2 (Extremo/Borda): Cliente negativado (default=yes). Ação esperada do modelo: Não oferecer crédito, oferecer um plano de renegociação.
 
 Você vai rodar seu modelo nesses 20 casos para provar que ele passa no teste
 .
@@ -41,7 +41,7 @@ Passo 5: O Produto Físico / A Tela (Etapa 5)
 Como um aplicativo de celular falaria com o seu modelo?
 O que fazer: Criar uma API, um aplicativo simples ou um Notebook interativo
 .
-Exemplo prático: O usuário digita o perfil do cliente na tela. O sistema roda o algoritmo e devolve: "Recomendação: Oferta B. Motivo: O cliente tem alto saldo bancário. Versão do modelo: v1.0". O sistema deve registrar um "log de auditoria" (um histórico) dizendo o que decidiu e por que decidiu
+Exemplo prático: O usuário digita o perfil do cliente na tela. O sistema roda o algoritmo e devolve: "Recomendação: Oferta B. Motivo: perfil maduro de maior renda, sem inadimplência. Versão do modelo: v1.0". O sistema deve registrar um "log de auditoria" (um histórico) dizendo o que decidiu e por que decidiu
 .
 O Diferencial: Vocês devem incluir um assistente virtual baseado em IA generativa (LLM) que consiga ler as decisões e resumi-las ou explicar as políticas internas do banco
 .

@@ -24,15 +24,17 @@ O desafio é **uma plataforma de experimentação adaptativa (multi-armed bandit
 
 Usaremos a base **Bank Marketing** do Kaggle (`henriqueyamahata/bank-marketing`), derivada do dataset Bank Marketing da UCI. Características que orientam o projeto:
 
-- **Colunas factuais:** `age` (idade), `job` (profissão), `marital`, `education`, `balance` (saldo bancário), `housing`, `loan`, `contact`, `campaign`, `pdays`, `previous`, `poutcome`, etc.
+- **Colunas factuais:** `age` (idade), `job` (profissão), `marital`, `education`, `default` (crédito em inadimplência), `housing`, `loan`, `contact`, `campaign`, `pdays`, `previous`, `poutcome`, + indicadores macroeconômicos (`emp.var.rate`, `cons.price.idx`, `cons.conf.idx`, `euribor3m`, `nr.employed`).
+- **⚠️ Não existe coluna de saldo (`balance`).** O arquivo indicado (`bank-additional-full.csv`) é a variante *with social/economic context*, que **não traz `balance`** — diferente do `bank-full.csv` clássico do UCI (que tem saldo mas não os indicadores macro, e **não está** neste dataset do Kaggle). As duas versões não são casáveis (testado: ~0,1% de match, sem chave de cliente). O brief original menciona "saldo"; reconciliamos usando proxies de capacidade financeira (`default`, `job`, `loan`, `housing`) — ver segmentação sintética abaixo.
 - **Vazamento temporal:** a coluna **`duration`** (duração do último contato) deve ser **removida** — ela só é conhecida *depois* da ligação e prevê o passado com informação do futuro. Documentar a remoção em `data/kaggle/README.md`.
 - **Target factual:** `y` (assinou depósito a prazo: sim/não) — usado para o baseline preditivo de propensão.
 - **Ofertas sintéticas (braços):** sobre a base, criamos um catálogo de ofertas:
   - `sem_oferta` (controle / não ofertar)
   - `cartao_credito` — **Oferta A: Cartão de Crédito**
   - `investimento` — **Oferta B: Investimento**
-  - `renegociacao` — plano de renegociação (para clientes negativados / saldo negativo)
-- **Hipóteses de negócio a testar:** jovens/saldo baixo → cartão de crédito; idosos/alto saldo → investimento; saldo negativo → renegociação em vez de crédito.
+  - `renegociacao` — plano de renegociação (para clientes negativados: `default = "yes"`)
+- **Segmentos sintéticos (proxies de capacidade financeira, sem `balance`):** `jovem_baixa_renda` (idade baixa + `job` de menor renda: student/unemployed/blue-collar/services), `maduro_alta_renda` (idade alta + `job` de maior renda: management/retired/self-employed/admin. + `default = "no"`), `negativado` (`default = "yes"`).
+- **Hipóteses de negócio a testar:** jovem/baixa renda → cartão de crédito; maduro/alta renda → investimento; negativado (`default = "yes"`) → renegociação em vez de crédito.
 
 **Estado de setup (30/05/2026):**
 - Org `DatathonG61` criada
@@ -158,7 +160,7 @@ Cada etapa: **objetivo · por quê · entregáveis · responsável · Definition
 - **Por quê:** se a banca não executa uma decisão de exemplo, conceito não importa. Assistente LLM é exigência do edital.
 - **Entregáveis:** FastAPI `POST /decide`, `contracts.py` pydantic, `decision_log.py` (SQLite), assistente LLM que lê o log e explica/resumir decisões e políticas, `Makefile` com `make demo`, testes.
 - **Quem:** **Matheus lidera.** Adryen garante a política plugada; Bertelli garante que o log alimenta o golden set.
-- **DoD:** pessoa externa roda `make demo`, digita um perfil de cliente e vê **"Recomendação: Oferta B — Motivo: alto saldo — versão do modelo: v1.0"** + log de auditoria, sem ajuda.
+- **DoD:** pessoa externa roda `make demo`, digita um perfil de cliente e vê **"Recomendação: Oferta B — Motivo: perfil maduro de maior renda, sem inadimplência — versão do modelo: v1.0"** + log de auditoria, sem ajuda.
 
 ### E6 — Arquitetura-alvo Azure — **Matheus**
 - **Objetivo:** demonstrar como rodaria em Azure (sem subir).
@@ -222,7 +224,7 @@ Cada etapa: **objetivo · por quê · entregáveis · responsável · Definition
 | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|
 | Esquecer de remover `duration` (leakage) | Média | Crítico | Remoção explícita em E1, revisada por Bertelli; teste em `tests/test_data.py` falha se `duration` presente. |
-| Bank Marketing pobre em features de contexto p/ bandit | Média | Alto | Gabriel deriva contexto sintético (segmento, canal, histórico) em E2 a partir de `age`/`balance`/`job`. |
+| Bank Marketing pobre em features de contexto p/ bandit | Média | Alto | Gabriel deriva contexto sintético (segmento, canal, histórico) em E2 a partir de `age`/`job`/`default`/`loan` (não há `balance` na base). |
 | Gerador sintético embute resposta | Alta | Alto | Bertelli faz "ataque ao gerador" sem. 3; Gabriel documenta seeds; revisão Gabriel↔Bertelli semanal. |
 | Integração só no fim | Alta | Crítico | `make demo` rodando ponta a ponta desde sem. 3. Sync semanal verifica. |
 | LLM/RAG fica pro fim | Alta | Médio | Matheus faz protótipo RAG sem. 5 com docs placeholder. |
