@@ -27,6 +27,7 @@ DATASET_SOURCE = "henriqueyamahata/bank-marketing"
 DATASET_ORIGINAL = "UCI Machine Learning Repository — Bank Marketing"
 DATASET_FILE = "bank-additional-full.csv"
 DATASET_VERSION = "with social/economic context"
+DATASET_LICENSE = "CC BY 4.0"
 
 METADATA_KEY = "bankmarketing.metadata"
 METADATA_KEY_BYTES = METADATA_KEY.encode("utf-8")
@@ -136,13 +137,20 @@ def load_modeling_table(path: Path | str = MODELING_TABLE_PATH) -> pd.DataFrame:
         metadata = _decode_metadata(raw_metadata)
         df.attrs["bankmarketing.metadata"] = metadata
 
-    logger.info(
-        "Modeling table carregada de %s (%d linhas x %d colunas) — source=%s",
-        path,
-        len(df),
-        len(df.columns),
-        metadata.get("source") if metadata else "desconhecida",
-    )
+    if metadata is not None:
+        logger.info(
+            "Modeling table carregada de %s (%d linhas x %d colunas) — "
+            "source=%s, version=%s, license=%s, leakage_removed=%s",
+            path,
+            len(df),
+            len(df.columns),
+            metadata.get("source"),
+            metadata.get("version"),
+            metadata.get("license"),
+            metadata.get("leakage_removed"),
+        )
+    else:
+        logger.warning("Modeling table carregada sem metadados de proveniência: %s", path)
     return df
 
 
@@ -153,6 +161,7 @@ def get_dataset_metadata() -> dict[str, str]:
         "original": DATASET_ORIGINAL,
         "file": DATASET_FILE,
         "version": DATASET_VERSION,
+        "license": DATASET_LICENSE,
         "n_rows": "41188",
         "n_features_raw": "20",
         "target": "y",

@@ -47,3 +47,16 @@ def test_dataset_metadata():
     meta = get_dataset_metadata()
     assert meta["leakage_removed"] == "duration"
     assert meta["target"] == "y"
+    assert meta["license"] == "CC BY 4.0"
+
+
+def test_load_modeling_table_logs_metadata(caplog):
+    from bankmarketing.data import DATASET_LICENSE, DATASET_SOURCE, DATASET_VERSION
+
+    with caplog.at_level("INFO"):
+        load_modeling_table()
+
+    assert "Modeling table carregada" in caplog.text
+    assert DATASET_SOURCE in caplog.text
+    assert DATASET_VERSION in caplog.text
+    assert DATASET_LICENSE in caplog.text
