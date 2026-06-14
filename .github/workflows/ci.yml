@@ -27,7 +27,7 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Lint (ruff)
-        run: uvx ruff check .
+        run: uv run ruff check .
 
       - name: Test (pytest)
-        run: uvx pytest -q
+        run: uv run pytest -q
